@@ -68,7 +68,7 @@ def diff_normalization(difference):
     size = difference.size
     diff_2d = difference.reshape((int(size/2), 2))
     row_norms = np.array([np.linalg.norm(row) for row in diff_2d])
-    diff_normalized = diff_2d/(6*row_norms[:, None])
+    diff_normalized = diff_2d/(10*row_norms[:, None])
     
     return diff_normalized
 
@@ -77,7 +77,7 @@ def diff_normalization(difference):
 #trajectories in the current directory, based on the model used in odeint(...)
 #(w,h,a) - parameters for model we are researching
 def vector_field(w, h, a):
-    xy = neighborhood((-8, -8), 17, 60)
+    xy = neighborhood((-pi, -pi), 8, 40)
     t = np.linspace(0, 1, 10)
     phi_integrated_arr = np.empty((10, 2))
     for phi in xy[1:]:
@@ -91,20 +91,20 @@ def vector_field(w, h, a):
     diff_normalized = diff_normalization(difference)
     
     #generating data for selected trajectories
-    t2 = np.linspace(0, 1000, 10000)
-    t3 = np.linspace(0, -1000, 10000)
-    phi_lc1 = (-9, 2.5)
+    t2 = np.linspace(0, 100, 1000)
+    t3 = np.linspace(0, -100, 1000)
+    phi_lc1 = (-pi/2 + 0.05, 2.5)
     lc1 = odeint(vvmodel, phi_lc1, t2, args=(w,h,a))
     
-    phi_lc2 = (9, -2.5)
+    phi_lc2 = (pi/2 - 0.05, -2.5)
     lc2 = odeint(vvmodel, phi_lc2, t2, args=(w,h,a))
-    
+    """
     phi_npi = (-pi+0.1, 0.05)
     utraj_npi = odeint(vvmodel, phi_npi, t2, args=(w,h,a))
     
     phi_pi = (pi+0.1, 0.05)
     utraj_pi = odeint(vvmodel, phi_pi, t2, args=(w,h,a))
-    
+    """
     phi_ssaddle1 = (-0.025,0.05)
     ssaddle1 = odeint(vvmodel, phi_ssaddle1, t3, args=(w,h,a))
     
@@ -119,10 +119,12 @@ def vector_field(w, h, a):
     
     plt.rcParams.update({'font.size':20})
     plt.figure(figsize=(12,8), dpi=80)
-    plt.xlim(-8,8)
+    plt.xlim(-pi/2, pi/2)
     plt.ylim(-3,3)
     plt.xlabel(r'$\phi$', labelpad=200, fontweight=1000)
     plt.ylabel(r'$\dot{\phi}$', labelpad = 310, fontweight = 1000)
+    plt.title("Phase Diagram for a Single Pedestrian")
+    plt.suptitle(r"w = 1, $\lambda = 1$, a = 1", y = 0.965)
     #moving axis
     # Move left y-axis and bottim x-axis to centre, passing through (0,0)
     ax = plt.subplot()
@@ -140,8 +142,8 @@ def vector_field(w, h, a):
     xticks = ax.xaxis.get_major_ticks()
     xticks[4].label1.set_visible(False)
     
-    yticks = ax.yaxis.get_major_ticks()
-    yticks[3].update_position(200)
+    #yticks = ax.yaxis.get_major_ticks()
+    #yticks[3].update_position(200)
     
     
     plt.xticks(fontweight=700)
@@ -156,15 +158,15 @@ def vector_field(w, h, a):
                   
     plt.plot(lc1[:,0], lc1[:, 1], color='b')
     plt.plot(lc2[:, 0], lc2[:, 1], color='b')
-    plt.plot(utraj_npi[:,0], utraj_npi[:,1], color='b')
-    plt.plot(utraj_pi[:,0], utraj_pi[:,1], color='b')
+    #plt.plot(utraj_npi[:,0], utraj_npi[:,1], color='b')
+    #plt.plot(utraj_pi[:,0], utraj_pi[:,1], color='b')
     plt.plot(ssaddle1[:,0], ssaddle1[:,1], color='b')
     plt.plot(ssaddle2[:,0], ssaddle2[:,1], color='b')
     plt.plot(usaddle1[:,0], usaddle1[:,1], color='b')
     plt.plot(usaddle2[:,0], usaddle2[:,1], color='b')
     
               
-    plt.savefig("./PhasePortraitVV.pdf")
+    plt.savefig("./PhasePortraitVV_4.pdf")
     plt.show()
     
 vector_field(1,1,1)
