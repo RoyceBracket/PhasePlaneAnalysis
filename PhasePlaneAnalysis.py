@@ -32,7 +32,7 @@ def neighborhood(center, radius, sampling):
     xy_matrix = [[]]
     for x in x_arr:
         for y in y_arr:
-            xy_matrix += [[0.1, 0.1, x, y]]
+            xy_matrix += [[x, y, 0.1, 0]]
         
     return xy_matrix
     
@@ -138,14 +138,15 @@ def vector_field(bounds, coords, fig_name, func, params):
     t = np.linspace(0, 1, 10)
     phi_integrated_arr = np.empty((10, 2))
     for phi in xy[1:]:
+        
         solution  = odeint(func, phi, t, args=params)[:, :2]
         phi_integrated_arr = concat((phi_integrated_arr, solution), axis=1)
-        
-    sol_arr = phi_integrated_arr[:, :2]
+
+    sol_arr = phi_integrated_arr[:, 2:]
     difference = sol_arr - np.roll(sol_arr, 1, axis=0)
     sol_arr = sol_arr[0]
     difference = difference[1]
-    diff_normalized = diff_normalization(difference)/18
+    diff_normalized = diff_normalization(difference)/100
     
     
     
@@ -157,7 +158,7 @@ def vector_field(bounds, coords, fig_name, func, params):
     plt.xlabel(r'$\phi$', labelpad=200, fontweight=1000)
     plt.ylabel(r'$\dot{\phi}$', labelpad = 310, fontweight = 1000)
     plt.title("Phase Diagram for Pedestrian-Bridge System")
-    plt.suptitle(r"w = {}, $\lambda = {}$, a = {}".format(params[1], params[4], params[5]), y = 0.965)
+    plt.suptitle(r"w = {}, $\lambda = {}$, a = {}".format(params[0], params[1], params[2]), y = 0.965)
     #moving axis
     # Move left y-axis and bottim x-axis to centre, passing through (0,0)
     ax = plt.subplot()
@@ -184,9 +185,10 @@ def vector_field(bounds, coords, fig_name, func, params):
     
     size = sol_arr.size
     sol = sol_arr.reshape((int(size/2), 2))
+    print(sol_arr)
     
-    for start, change in zip(sol, diff_normalized):
-        plt.arrow(start[0], start[1], change[0], change[1], width = 0.01, color="#808080")
+    for start, change in zip(sol, diff_normalized):        
+        plt.arrow(start[0], start[1], change[0], change[1], width = 0.003, color="#808080")
         
     """
     #\dot{x} vs x                       
@@ -203,17 +205,18 @@ def vector_field(bounds, coords, fig_name, func, params):
     
     """
     #\phi, \dot{\phi} trajectory
-    t2 = np.linspace(0, 5000, 100000)
+    t2 = np.linspace(0, 500, 10000)
     phi_x = [0.1, 0.1, 0.75, 0]
     traj = odeint(func, phi_x, t2, args = params)    
-    
+
     phi = traj[:, 0]
-    neg_phi = np.where(phi<-1)
-    pos_phi = np.where(phi>1)
-    phi[neg_phi] = np.mod(phi[neg_phi], p)
-    phi[pos_phi] = np.mod(phi[pos_phi], -p)
+ 
+    quotient, phi_remainder = np.divmod(phi, p)
+    phi_odd_div = np.where(np.mod(quotient, 2) == 1)
+    phi_remainder[phi_odd_div] -= 0.5
+
     
-    plt.plot(phi[99000:], traj[99000:, 1], color='b')                           
+    plt.plot(phi_remainder[9000:], traj[9000:, 1], color='b')                           
 
     #for traj in selected_traj(func, params, coords):
     #    plt.plot(traj[:,0], traj[:, 1], color='b')
@@ -237,8 +240,8 @@ def phase_plane_traj(func, coords, params, bounds, fig_name):
     plt.rcParams.update({'font.size':20})
     plt.figure(figsize=(12,8), dpi=80)
     #plt.xlim(-pi/2, pi/2)
-    plt.xlim(bounds[0][0], bounds[0][0] + bounds[1])
-    plt.ylim(bounds[0][1], bounds[0][1] + bounds[1])
+    plt.xlim(-0.5, 0.5)
+    plt.ylim(-1, 1)
     plt.xlabel(r'$x$', labelpad=200, fontweight=1000)
     plt.ylabel(r'$\dot{x}$', labelpad = 310, fontweight = 1000)
     plt.title("Phase Diagram for Pedestrian-Bridge System")
@@ -313,8 +316,13 @@ fig_name = "PhaseDiagramPBPHI_mu_0.1_w_07_lambda_1_a_1_k_072_h_005_p_15"
 
 #vector_field(bounds, coords_bp, fig_name, pedestrian_bridge, params)
 
-phase_plane_traj(pedestrian_bridge, coords_bp, params, bounds, fig_name)
-time_series(pedestrian_bridge, params, "PHITimeSeries_mu_0.1_w_07_lambda_1_a_1_k_072_h_005_p_15")
+#phase_plane_traj(pedestrian_bridge, coords_bp, params, bounds, fig_name)
+#time_series(pedestrian_bridge, params, "PHITimeSeries_mu_0.1_w_07_lambda_1_a_1_k_072_h_005_p_15")
+single_params = (0.7, 1, 0.72, 0.5)
+single_ped_fig = 'SinglePedestrianTest'
+single_bounds = ((-1.5, -1.5), 3, 60)
+coords_sp = ()
+vector_field(single_bounds, coords_sp, single_ped_fig, vvmodel, single_params)
 
 
 """
