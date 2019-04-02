@@ -13,8 +13,8 @@ from numpy import concatenate as concat
 from SinglePedestrianModel import vvmodel
 from PedestrianBridgeModel import pedestrian_bridge 
 
-def parameter_analysis(func, params, index, start, end, figname, param_dictionary): 
-    varied_param = np.linspace(start, end, 60)
+def parameter_analysis(func, params, index, start, end, sampling, figname, param_dictionary): 
+    varied_param = np.linspace(start, end, 100)
     max_x = []
     phi_x = [0.1, 0.1, 0.75, 0]
     if index == 0:
@@ -42,22 +42,30 @@ def parameter_analysis(func, params, index, start, end, figname, param_dictionar
     plt.savefig("./NewFigs/{}.pdf".format(figname))
     plt.show()
     
-    np.save("./Data/{}_60".format(figname), max_x)
+    np.save("./Data/{}_{}".format(figname, sampling), max_x)
     
     return
 
 #params: (mu, w, g, l, lambda, a, k, h, p)
 
 params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.05, 0.3]
-param_dicitonary = ('\mu', 'g', 'l', '\lambda', 'a', 'k', 'h', 'p')
+sampling = 60
+param_dicitonary = ('\mu', 'w', 'g', 'l', '\lambda', 'a', 'k', 'h', 'p')
 
-parameter_analysis(pedestrian_bridge, params, 8, 0.05, 0.3, "MAX_X_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_0.05_p_var0.05_0.3", param_dicitonary)
-parameter_analysis(pedestrian_bridge, params, 2, 1.1, 3.4, "MAX_X_mu_0.1_w_var1.1_3.4_lambda_1_a_1_k_1_h_0.05_p_0.3")
-parameter_analysis(pedestrian_bridge, params, 4, 0.4, 0.6, "MAX_X_mu_0.1_w_0.7_lambda_var0.4_0.6_a_1_k_1_h_0.05_p_0.3")
-parameter_analysis(pedestrian_bridge, params, 5, 0.5, 0.7, "MAX_X_mu_0.1_w_0.7_lambda_1_a_var0.5_0.7_k_1_h_0.05_p_0.3")
-parameter_analysis(pedestrian_bridge, params, 5, 0.1, 0.35, "MAX_X_mu_0.1_w_0.7_lambda_1_a_var0.1_0.35_k_1_h_0.05_p_03.")
-parameter_analysis(pedestrian_bridge, params, 6, 0.2, 1.5, "MAX_X_mu_0.1_w_0.7_lambda_1_a_1_k_varied_h_0.05_p_0.3")
-parameter_analysis(pedestrian_bridge, params, 7, 0, 0.01, "MAX_X_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_var0_0.01_p_0.3")
+parameter_analysis(pedestrian_bridge, params, 1, 1.1, 3.4, sampling, "MAX_X_mu_0.1_w_var1.1_3.4_lambda_1_a_1_k_1_h_0.05_p_0.3", param_dicitonary)
+parameter_analysis(pedestrian_bridge, params, 5, 0.25, 0.35, sampling, "MAX_X_mu_0.1_w_0.7_lambda_1_a_var0.25_0.35_k_1_h_0.05_p_0.3", param_dicitonary)
+parameter_analysis(pedestrian_bridge, params, 5, 1, 3, sampling, "MAX_X_mu_0.1_w_0.7_lambda_1_a_var1_3_k_1_h_0.05_p_0.3", param_dicitonary)
+parameter_analysis(pedestrian_bridge, params, 6, 0, 0.3, sampling, "MAX_X_mu_0.1_w_0.7_lambda_1_a_1_k_var0_0.2_h_0.05_p_0.3", param_dicitonary)
+parameter_analysis(pedestrian_bridge, params, 7, 0, 0.004, sampling, "MAX_X_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_var0_0.004_p_0.3", param_dicitonary)
+parameter_analysis(pedestrian_bridge, params, 8, 0.2, 0.25, sampling, "MAX_X_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_0.05_p_var0.2_0.25", param_dicitonary)
+
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.001, 0.3]
+sampling = 200
+
+parameter_analysis(pedestrian_bridge, params, 8, 0.1, 0.7, sampling, "MAX_X_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_0.001_p_var0.1_0.7", param_dicitonary)
+parameter_analysis(pedestrian_bridge, params, 6, 0.1, 2, sampling, "MAX_X_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_0.001_p_var0.1_0.7", param_dicitonary)
+parameter_analysis(pedestrian_bridge, params, 5, 0.1, 2, sampling, "MAX_X_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_0.001_p_var0.1_0.7", param_dicitonary)
+
 
 
 
