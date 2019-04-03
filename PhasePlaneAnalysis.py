@@ -173,15 +173,15 @@ def phase_plane_traj(func, coords, params, interval_cond, func_vars = [0, 1], tr
 #arrows = True - whether or not to include vector field arrows in the graph
 #traj_type - used for drawing trajectories in phase plane. 'reg' if nothing needs to be changed about
 #output returned from odeint, 'mod' if the output needs to be modded by some parameter mod_param
-def vector_field(bounds, func, params, fig_name, coords, func_vars = [0,1], \
-                 param_tuple = (), fig_title = '', arrows = True, interval_cond = (0, 5000, 100000), 
+def phase_plane(func, params, fig_name, coords, func_vars = [0,1], bounds = (), \
+                 param_tuple = (), fig_title = '', arrows = False, interval_cond = (0, 5000, 100000), 
                  traj_type = 'reg', mod_param = 0, xlim = None, ylim = None, xlabel = None, ylabel = None,
                  time_series = False):
-    corner, r, sampling = bounds        
     graph_specifications(graph_type = 'phase plane', xlabel = xlabel, ylabel = ylabel, param_tuple = param_tuple, \
                           xlim = xlim, ylim = ylim, title = fig_title)
     if arrows:
     #creating an array of points corresponding to the 2d grid where vector field arrows are going to be graphed
+        corner, r, sampling = bounds        
         xy = neighborhood(*bounds)
         t = np.linspace(0, 1, 10)
         phi_integrated_arr = np.empty((10, 2))
@@ -218,81 +218,82 @@ def vector_field(bounds, func, params, fig_name, coords, func_vars = [0,1], \
         trajectories, t = selected_traj(func, params, coords, interval_cond)
         if traj_type == 'mod':
             traj1 = mod(trajectories[sample-100:sample, func_vars[0]], mod_param)
+        else:
+            traj1 = trajectories[sample-100:sample, func_vars[0]]
         t = t[sample-100:sample]
         pltime_series(traj1, t, 't', xlabel, fig_name)
     
     return 'vector_field'
-    
+
+#generates all the phase plane graphs along with time series for every parameter in 
+#np.linspace(param_linspace) for the Pedestrian_Bridge Model
+#The images are saved in the followin way
+#All phase planes are saved in ./NewFigs/Phase/PhasePlane/ with the name of the form
+#PhasePlane_PhiDotPhi_all_parameter_specifications
+#param_index = (i,j) is a tuple where i is a index for the parameter in param_tuple array
+#and j is the index for the parameter in the params array.
+#params and param_tuple are passed as arrays and are converted into tuples within the method code
+def bridge_paramVar(param_linspace, param_index, params, coords, param_tuple):
+    param_tuple_index, params_index = param_index
+    param_arr = np.linspace(*param_linspace)
+
+    for param in param_arr:
+        params[params_index] = param
+        param_tuple[param_tuple_index] = param
+        fig_name = "_PhiDotPhi_" + "_{}"*len(param_tuple)
+        fig_name = fig_name.format(*tuple(param_tuple))
+        phase_plane(pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,1], param_tuple=param_tuple, \
+                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = '\dot{\phi}', time_series = True)
+        fig_name = "_PhiX_" + "_{}"*len(param_tuple)
+        fig_name = fig_name.format(*tuple(param_tuple))
+        phase_plane(pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,2], param_tuple=param_tuple, \
+                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = 'x', time_series = False)
+        fig_name = "_XDotX_" + "_{}"*len(param_tuple)
+        fig_name = fig_name.format(*tuple(param_tuple))
+        phase_plane(pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[2,3], param_tuple=param_tuple, \
+                 traj_type = 'reg', mod_param = params[-1], arrows = False, xlabel = 'x', ylabel = '\dot{x}', time_series = True)
+        
+    return 
 #vector_field(bounds, func, params, fig_name, coords, func_vars = [0,1], \
 #                 param_tuple = (), fig_title = '', arrows = True, interval_cond = (0, 5000, 50000), 
 #                 traj_type = 'reg', mod_param = 0, **kwargs)
+#params=  (mu, w, g, l, lambda, a, k, h, p)
 
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.05, 0.3]
+params = [0.1, 0.7, 10, 1, 0.4666666666, 1, 2, 0.002, 0.3]
 bounds = ((-0.4, -0.4), 0.5, 100)
 coords = [[0.1, 0.1, 0, 0]]
-param_tuple = ('\mu', 0.1, 'w', 0.7, '\lambda', 1, 'a', 1, 'k', 1, 'h', 0.01)
-#varying mu:
-mu_arr = np.linspace(0.05, 0.2, 10)
-for mu in mu_arr:
-    fig_name = "_PhiDotPhi_mu_{}_w_0.7_lambda_1_a_1_k_1_h_0.05_p_0.3".format(mu)
-    param_tuple = ('\mu', mu, 'w', 0.7, '\lambda', 1, 'a', 1, 'k', 1, 'h', 0.05)
-    params[0] = mu
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,1], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = '\dot{\phi}', time_series = True)
-    fig_name = "_PhiX_mu_{}_w_0.7_lambda_1_a_1_k_1_h_0.05_p_0.3".format(mu)
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,2], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = 'x')
-    fig_name = "_XDotX_mu_{}_w_0.7_lambda_1_a_1_k_1_h_0.05_p_0.3".format(mu)
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[2,3], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = 'x', ylabel = '\dot{x}', time_series = True)
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.05, 0.3]
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 0.466666, 'a', 1, 'k', 2, 'h', 0.002, 'p', 0.3]
+fig_name = "_PhiDotPhi_" + "_{}"*len(param_tuple)
+fig_name = fig_name.format(*tuple(param_tuple))
 
-h_arr = np.linspace(0, 0.002, 10)
-for h in h_arr:
-    fig_name = "_PhiDotPhi_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_{}_p_0.3".format(h)
-    param_tuple = ('\mu', 0.1, 'w', 0.7, '\lambda', 1, 'a', 1, 'k', 1, 'h', h)
+#phase_plane(pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,1], param_tuple = param_tuple, \
+#            traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel='\dot{\phi}')
+#p
+#p_linspace = (0.1, 1, 10)
+#p_index = (13, 8)
+#bridge_paramVar(p_linspace, p_index, params, coords, param_tuple)
 
-    params[7] = h
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,1], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = '\dot{\phi}', time_series = True)
-    fig_name = "_PhiX_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_{}_p_0.3".format(h)
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,2], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = 'x')
-    fig_name = "_XDotX_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_{}_p_0.3".format(h)
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[2,3], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = 'x', ylabel = '\dot{x}', time_series = True)
-
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.05, 0.3]
-lambda_arr = np.linspace(0.5, 0.6, 5)
-for lmbda in lambda_arr:
-    fig_name = "_PhiDotPhi_mu_0.1_w_0.7_lambda_{}_a_1_k_1_h_0.05_p_0.3".format(lmbda)
-    param_tuple = ('\mu', 0.1, 'w', 0.7, '\lambda', lmbda, 'a', 1, 'k', 1, 'h', 0.05)
-    params[4] = lmbda
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,1], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = '\dot{\phi}', time_series = True)
-    fig_name = "_PhiX_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_0.05_p_0.3".format(lmbda)
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,2], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = 'x')
-    fig_name = "_XDotX_mu_0.1_w_0.7_lambda_1_a_1_k_1_h_0.05_p_0.3".format(lmbda)
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[2,3], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = 'x', ylabel = '\dot{x}', time_series = True)
-
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.05, 0.3]
-a_arr = np.linspace(0.2, 0.35, 10)
-for a in a_arr:
-    fig_name = "_PhiDotPhi_mu_0.1_w_0.7_lambda_1_a_{}_k_1_h_0.05_p_0.3".format(a)
-    param_tuple = ('\mu', 0.1, 'w', 0.7, '\lambda', 1, 'a', a, 'k', 1, 'h', 0.05)
-    params[5] = a
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,1], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = '\dot{\phi}', time_series = True)
-    fig_name = "_PhiX_mu_0.1_w_0.7_lambda_1_a_{}_k_1_h_0.05_p_0.3".format(a)
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,2], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = 'x')
-    fig_name = "_XDotX_mu_0.1_w_0.7_lambda_1_a_{}_k_1_h_0.05_p_0.3".format(a)
-    vector_field(bounds, pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[2,3], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = 'x', ylabel = '\dot{x}', time_series = True)
-    
-
+#h
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#h_linspace = (0, 0.0035, 10)
+#h_index = (11, 7)
+#bridge_paramVar(h_linspace, h_index, params, coords, param_tuple)
+##a
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#a_linspace = (0.2, 0.4, 8)
+#a_index = (7, 5)
+#bridge_paramVar(a_linspace, a_index, params, coords, param_tuple)
+##k
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#k_linspace = (0.1, 2, 10)
+#k_index = (9, 6)
+#bridge_paramVar(k_linspace, k_index, params, coords, param_tuple)
+##lambda
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#lmbda_linspace = (0.2, 1, 10)
+#lmbda_index = (5, 4)
+#bridge_paramVar(lmbda_linspace, lmbda_index, params, coords, param_tuple)
+#w
 
 
 #traj1 = trajectories[99900:100000, 0]
@@ -300,50 +301,3 @@ for a in a_arr:
 #t = t[99900:100000]
 #time_series(traj1, t, 't', '\phi', 'PHITimeSeries')
     
-"""
-bounds = ((-0.3, -0.3), 0.6, 60)
-#coords_sp1 = (())
-#coords_sp2 = 
-coords_bp = ()
-#params: (mu, w, g, l, lambda, a, k, h, p)
-#params = (0.1, 0.7, 10, 1, 0.1, 0.2, 1, 0.1, 0.3)
-fig_name = "PhaseDiagramPBPHI_mu_0.1_w_07_lambda_1_a_1_k_072_h_005_p_15"
-
-#vector_field(bounds, coords_bp, fig_name, pedestrian_bridge, params)
-
-#phase_plane_traj(pedestrian_bridge, coords_bp, params, bounds, fig_name)
-#time_series(pedestrian_bridge, params, "PHITimeSeries_mu_0.1_w_07_lambda_1_a_1_k_072_h_005_p_15")
-single_params = (0.7, 1, 0.72, 0.5)
-single_ped_fig = 'SinglePedestrianTest'
-single_bounds = ((-1.5, -1.5), 3, 60)
-coords_sp = ()
-vector_field(single_bounds, coords_sp, single_ped_fig, vvmodel, single_params)
-"""
-
-"""
-    #phi_lc1 = (-pi/2 + 0.05, 2.5)
-    phi_lc1 = (-8, 2.5)
-    lc1 = odeint(vvmodel, phi_lc1, t2, args=params)
-    
-    #phi_lc2 = (pi/2 - 0.05, -2.5)
-    phi_lc2 = (8, -2.5)
-    lc2 = odeint(vvmodel, phi_lc2, t2, args=params)
-    
-    phi_npi = (-pi+0.1, 0.05)
-    utraj_npi = odeint(vvmodel, phi_npi, t2, args=params)
-    
-    phi_pi = (pi+0.1, 0.05)
-    utraj_pi = odeint(vvmodel, phi_pi, t2, args=params)
-    
-    phi_ssaddle1 = (-0.025,0.05)
-    ssaddle1 = odeint(vvmodel, phi_ssaddle1, t3, args=params)
-    
-    phi_ssaddle2 = (0.025, -0.05)
-    ssaddle2 = odeint(vvmodel, phi_ssaddle2, t3, args=params)
-    
-    phi_usaddle1 = (0.025, 0.05)
-    usaddle1 = odeint(vvmodel, phi_usaddle1, t2, args=params)
-    
-    phi_usaddle2 = (-0.025, -0.05)
-    usaddle2 = odeint(vvmodel, phi_usaddle2, t2, args=params)
-"""
