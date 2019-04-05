@@ -31,10 +31,10 @@ def graph_specifications(graph_type = None, xlim = None, ylim = None, xlabel = N
             plt.ylim(ylim)
             
         if xlabel != None:
-            plt.xlabel(r'${}$'.format(xlabel), labelpad=200, fontweight=1000)
+            plt.xlabel(r'${}$'.format(xlabel), fontweight=1000)
 
         if ylabel != None:
-            plt.ylabel(r'${}$'.format(ylabel), labelpad = 310, fontweight = 1000)
+            plt.ylabel(r'${}$'.format(ylabel), fontweight = 1000)
 
         if title != None:
             plt.title(title)
@@ -45,8 +45,8 @@ def graph_specifications(graph_type = None, xlim = None, ylim = None, xlabel = N
         #moving axis
         # Move left y-axis and bottim x-axis to centre, passing through (0,0)
         ax = plt.subplot()
-        ax.spines['left'].set_position('center')
-        ax.spines['bottom'].set_position('center')
+        #ax.spines['left'].set_position('center')
+        #ax.spines['bottom'].set_position('center')
         ax.xaxis.get_ticklabels
         # Eliminate upper and right axes
         ax.spines['right'].set_color('none')
@@ -61,16 +61,19 @@ def graph_specifications(graph_type = None, xlim = None, ylim = None, xlabel = N
         #yticks[3].update_position(200)
         plt.xticks(fontweight=700)
         plt.yticks(fontweight=700)
+        plt.tight_layout(pad=4)
     else: 
         plt.rcParams.update({'font.size':20})
         plt.figure(figsize=(12,8), dpi=80)
+        plt.tight_layout(pad=2)
+
         if xlabel != None:
             plt.xlabel(r'${}$'.format(xlabel), fontweight=1000)
         if xlabel != None:
             plt.ylabel(r'${}$'.format(ylabel), fontweight = 1000)
         if title != None:
             plt.title(title)
-    
+        
     return
 
 
@@ -124,20 +127,21 @@ def selected_traj(func, params, coords, interval_cond):
     return (trajectories, t)
 
     
-def pltime_series(traj, t, xlabel, ylabel, fig_name, title = None):
+def pltime_series(traj, t, xlabel, ylabel, fig_name, title = None, tseries_dir = ''):
    
     graph_specifications(xlabel = xlabel, ylabel = ylabel, title = title)
     
     plt.plot(t, traj)
-    plt.savefig("./NewFigs/TimeSeries/TS{}.pdf".format(fig_name))
+    tseries_name = tseries_dir + "TimeSeries_" + fig_name
+    plt.savefig("./{}".format(tseries_name))
     plt.show()
     
     return
 
 def mod(val, p):
-    quotient, remainder = np.divmod(val, p)
-    rem_odd_div = np.where(np.mod(quotient, 2) == 1)
-    remainder[rem_odd_div] -= p
+    quotient, remainder = np.divmod(val, 4*p)
+    #rem_odd_div = np.where(np.mod(quotient, 2) == 1)
+    #remainder[rem_odd_div] -= p
     
     return remainder
 
@@ -176,7 +180,7 @@ def phase_plane_traj(func, coords, params, interval_cond, func_vars = [0, 1], tr
 def phase_plane(func, params, fig_name, coords, func_vars = [0,1], bounds = (), \
                  param_tuple = (), fig_title = '', arrows = False, interval_cond = (0, 5000, 100000), 
                  traj_type = 'reg', mod_param = 0, xlim = None, ylim = None, xlabel = None, ylabel = None,
-                 time_series = False):
+                 time_series = False, pplane_dir = '', tseries_dir = ''):
     graph_specifications(graph_type = 'phase plane', xlabel = xlabel, ylabel = ylabel, param_tuple = param_tuple, \
                           xlim = xlim, ylim = ylim, title = fig_title)
     if arrows:
@@ -209,8 +213,8 @@ def phase_plane(func, params, fig_name, coords, func_vars = [0,1], bounds = (), 
             
     phase_plane_traj(func, coords, params, interval_cond, func_vars = func_vars, traj_type = traj_type, \
                      mod_param = mod_param)
-    
-    plt.savefig("./NewFigs/PhasePlane/PhasePlane{}.pdf".format(fig_name))
+    pplane_name = pplane_dir + "PhasePlane_" +  fig_name
+    plt.savefig("./{}".format(pplane_name))
     plt.show()
     
     if time_series:
@@ -221,7 +225,7 @@ def phase_plane(func, params, fig_name, coords, func_vars = [0,1], bounds = (), 
         else:
             traj1 = trajectories[sample-100:sample, func_vars[0]]
         t = t[sample-100:sample]
-        pltime_series(traj1, t, 't', xlabel, fig_name)
+        pltime_series(traj1, t, 't', xlabel, fig_name, tseries_dir = tseries_dir)
     
     return 'vector_field'
 
@@ -233,66 +237,98 @@ def phase_plane(func, params, fig_name, coords, func_vars = [0,1], bounds = (), 
 #param_index = (i,j) is a tuple where i is a index for the parameter in param_tuple array
 #and j is the index for the parameter in the params array.
 #params and param_tuple are passed as arrays and are converted into tuples within the method code
-def bridge_paramVar(param_linspace, param_index, params, coords, param_tuple):
+def bridge_paramVar(param_linspace, param_index, params, coords, param_tuple, pplane_dir = '', tseries_dir = '', combTSeries = False):
     param_tuple_index, params_index = param_index
     param_arr = np.linspace(*param_linspace)
 
     for param in param_arr:
         params[params_index] = param
         param_tuple[param_tuple_index] = param
-        fig_name = "_PhiDotPhi_" + "_{}"*len(param_tuple)
+        fig_name = "PhiDotPhi" + "_{}"*len(param_tuple) + ".png"
         fig_name = fig_name.format(*tuple(param_tuple))
         phase_plane(pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,1], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = '\dot{\phi}', time_series = True)
-        fig_name = "_PhiX_" + "_{}"*len(param_tuple)
+                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = '\dot{\phi}', time_series = True,
+                 tseries_dir = tseries_dir, pplane_dir = pplane_dir)
+        fig_name = "PhiX" + "_{}"*len(param_tuple) + ".png"
         fig_name = fig_name.format(*tuple(param_tuple))
         phase_plane(pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,2], param_tuple=param_tuple, \
-                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = 'x', time_series = False)
-        fig_name = "_XDotX_" + "_{}"*len(param_tuple)
+                 traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel = 'x', time_series = False, 
+                 tseries_dir = tseries_dir, pplane_dir = pplane_dir)
+        fig_name = "XDotX" + "_{}"*len(param_tuple) + ".png"
         fig_name = fig_name.format(*tuple(param_tuple))
         phase_plane(pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[2,3], param_tuple=param_tuple, \
-                 traj_type = 'reg', mod_param = params[-1], arrows = False, xlabel = 'x', ylabel = '\dot{x}', time_series = True)
+                 traj_type = 'reg', mod_param = params[-1], arrows = False, xlabel = 'x', ylabel = '\dot{x}', time_series = True, 
+                 tseries_dir = tseries_dir, pplane_dir = pplane_dir)
+        
+    if combTSeries: 
+        print('combTSeries')
+        
         
     return 
 #vector_field(bounds, func, params, fig_name, coords, func_vars = [0,1], \
 #                 param_tuple = (), fig_title = '', arrows = True, interval_cond = (0, 5000, 50000), 
 #                 traj_type = 'reg', mod_param = 0, **kwargs)
 #params=  (mu, w, g, l, lambda, a, k, h, p)
+pplane_dir = "NewFigs/PhasePlane/"
+tseries_dir = "NewFigs/TimeSeries/"
 
-params = [0.1, 0.7, 10, 1, 0.4666666666, 1, 2, 0.002, 0.3]
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
 bounds = ((-0.4, -0.4), 0.5, 100)
 coords = [[0.1, 0.1, 0, 0]]
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 0.466666, 'a', 1, 'k', 2, 'h', 0.002, 'p', 0.3]
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
 fig_name = "_PhiDotPhi_" + "_{}"*len(param_tuple)
 fig_name = fig_name.format(*tuple(param_tuple))
 
 #phase_plane(pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,1], param_tuple = param_tuple, \
 #            traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel='\dot{\phi}')
 #p
-#p_linspace = (0.1, 1, 10)
-#p_index = (13, 8)
-#bridge_paramVar(p_linspace, p_index, params, coords, param_tuple)
-
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+pplane_pdir = pplane_dir + "p_var/"
+tseries_pdir = tseries_dir + "p_var/"
+p_linspace = (0.1, 1, 10)
+p_index = (13, 8)
+bridge_paramVar(p_linspace, p_index, params, coords, param_tuple, pplane_dir = pplane_pdir, tseries_dir = tseries_pdir)
 #h
-#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-#h_linspace = (0, 0.0035, 10)
-#h_index = (11, 7)
-#bridge_paramVar(h_linspace, h_index, params, coords, param_tuple)
-##a
-#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-#a_linspace = (0.2, 0.4, 8)
-#a_index = (7, 5)
-#bridge_paramVar(a_linspace, a_index, params, coords, param_tuple)
-##k
-#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-#k_linspace = (0.1, 2, 10)
-#k_index = (9, 6)
-#bridge_paramVar(k_linspace, k_index, params, coords, param_tuple)
-##lambda
-#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-#lmbda_linspace = (0.2, 1, 10)
-#lmbda_index = (5, 4)
-#bridge_paramVar(lmbda_linspace, lmbda_index, params, coords, param_tuple)
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+pplane_hdir = pplane_dir + "h_var/"
+tseries_hdir = tseries_dir + "h_var/"
+h_linspace = (0, 0.0035, 10)
+h_index = (11, 7)
+bridge_paramVar(h_linspace, h_index, params, coords, param_tuple, pplane_dir = pplane_hdir, tseries_dir = tseries_hdir)
+#a
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+pplane_adir = pplane_dir + "a_var/"
+tseries_adir = tseries_dir + "a_var/"
+a_linspace = (0.2, 0.4, 8)
+a_index = (7, 5)
+bridge_paramVar(a_linspace, a_index, params, coords, param_tuple, pplane_dir = pplane_adir, tseries_dir = tseries_adir)
+#k
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+pplane_kdir = pplane_dir + "k_var/"
+tseries_kdir = tseries_dir + "k_var/"
+k_linspace = (0.1, 2, 10)
+k_index = (9, 6)
+bridge_paramVar(k_linspace, k_index, params, coords, param_tuple, pplane_dir = pplane_kdir, tseries_dir = tseries_kdir)
+#lambda
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+pplane_lmbdadir = pplane_dir + "lambda_var/"
+tseries_lmbdadir = tseries_dir + "lambda_var/"
+lmbda_linspace = (0.2, 1, 10)
+lmbda_index = (5, 4)
+bridge_paramVar(lmbda_linspace, lmbda_index, params, coords, param_tuple, pplane_dir = pplane_lmbdadir, tseries_dir = tseries_lmbdadir)
+#mu
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+pplane_mudir = pplane_dir + "mu_var/"
+tseries_mudir = tseries_dir + "mu_var/"
+mu_linspace = (0.07, 0.13, 10)
+mu_index = (1, 0)
+bridge_paramVar(mu_linspace, mu_index, params, coords, param_tuple, pplane_dir = pplane_mudir, tseries_dir = tseries_mudir)
 #w
 
 
