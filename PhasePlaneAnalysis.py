@@ -110,8 +110,68 @@ def diff_normalization(difference):
 #coords = [..., (x_i, y_i), ...] - 
 #func - model to be integrated over
 #params - parameters for the model
+    
+def data_overParam(func, params, param_index, param_linspace, coord, coord_linspace, data_name = '', \
+                   save = True, directory = './'):
+    param_arr = np.linspace(*param_linspace)
+    t = np.linspace(*coord_linspace)
+    traj_comb = []
+    
+    for param in param_arr:
+        params[param_index] = param
+        traj = odeint(func, coord, t, args = tuple(params))
+        traj[:, 0] = np.mod(traj[:, 0], 4*params[-1])
+        traj_comb.append(traj)
+        
+    if save:
+        traj_name = directory + "traj_" + data_name
+        params_name = directory + "params_" + data_name
+        full_params = [params, param_index, param_linspace, coord, coord_linspace]
+        np.save(traj_name, traj_comb)
+        np.save(params_name, full_params)
+    
+    print('finished')
+    return traj_comb
+#params=  (mu, w, g, l, lambda, a, k, h, p)
 
-def selected_traj(func, params, coords, interval_cond):
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+param_name = "_{}"*len(param_tuple)
+param_name = param_name.format(*param_tuple)
+print(param_name)
+coord = [0.1, 0.1, 0.75, 0]
+#p
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+p_linspace = (0.1, 1, 100)
+data_name = "pvar"+ param_name
+data_overParam(pedestrian_bridge, params, 8, p_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+#h
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+h_linspace = (0, 0.005, 100)
+data_name = "hvar"+ param_name
+data_overParam(pedestrian_bridge, params, 7, h_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+#k
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+k_linspace = (0.1, 1.5, 100)
+data_name = "kvar"+ param_name
+data_overParam(pedestrian_bridge, params, 6, k_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+#mu
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+mu_linspace = (0.05, 0.15, 100)
+data_name = "muvar"+ param_name
+data_overParam(pedestrian_bridge, params, 0, mu_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+#lambda
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+lambda_linspace = (0.1, 1.5, 100)
+data_name = "lambdavar"+ param_name
+data_overParam(pedestrian_bridge, params, 4, lambda_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+#a
+params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+a_linspace = (0.1, 1.5, 100)
+data_name = "avar"+ param_name
+data_overParam(pedestrian_bridge, params, 5, a_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+
+
+def selected_traj(func, params, coords, interval_cond, save = True, directory = ''):
     t = np.linspace(*interval_cond)
     params = tuple(params)
     
@@ -124,7 +184,7 @@ def selected_traj(func, params, coords, interval_cond):
         trajectories = concat((trajectories, odeint(func, xy, t, args=params)))
         t = np.concatenate((t,t))
     
-    return (trajectories, t)
+    return 
 
     
 def pltime_series(traj, t, xlabel, ylabel, fig_name, title = None, tseries_dir = ''):
@@ -139,7 +199,7 @@ def pltime_series(traj, t, xlabel, ylabel, fig_name, title = None, tseries_dir =
     return
 
 def mod(val, p):
-    quotient, remainder = np.divmod(val, 4*p)
+    quotient, remainder = np.divmod(val, p)
     #rem_odd_div = np.where(np.mod(quotient, 2) == 1)
     #remainder[rem_odd_div] -= p
     
@@ -280,55 +340,55 @@ fig_name = "_PhiDotPhi_" + "_{}"*len(param_tuple)
 fig_name = fig_name.format(*tuple(param_tuple))
 
 #phase_plane(pedestrian_bridge, tuple(params), fig_name, coords, func_vars=[0,1], param_tuple = param_tuple, \
-#            traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel='\dot{\phi}')
-#p
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
-pplane_pdir = pplane_dir + "p_var/"
-tseries_pdir = tseries_dir + "p_var/"
-p_linspace = (0.1, 1, 10)
-p_index = (13, 8)
-bridge_paramVar(p_linspace, p_index, params, coords, param_tuple, pplane_dir = pplane_pdir, tseries_dir = tseries_pdir)
-#h
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
-pplane_hdir = pplane_dir + "h_var/"
-tseries_hdir = tseries_dir + "h_var/"
-h_linspace = (0, 0.0035, 10)
-h_index = (11, 7)
-bridge_paramVar(h_linspace, h_index, params, coords, param_tuple, pplane_dir = pplane_hdir, tseries_dir = tseries_hdir)
-#a
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
-pplane_adir = pplane_dir + "a_var/"
-tseries_adir = tseries_dir + "a_var/"
-a_linspace = (0.2, 0.4, 8)
-a_index = (7, 5)
-bridge_paramVar(a_linspace, a_index, params, coords, param_tuple, pplane_dir = pplane_adir, tseries_dir = tseries_adir)
-#k
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
-pplane_kdir = pplane_dir + "k_var/"
-tseries_kdir = tseries_dir + "k_var/"
-k_linspace = (0.1, 2, 10)
-k_index = (9, 6)
-bridge_paramVar(k_linspace, k_index, params, coords, param_tuple, pplane_dir = pplane_kdir, tseries_dir = tseries_kdir)
-#lambda
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
-pplane_lmbdadir = pplane_dir + "lambda_var/"
-tseries_lmbdadir = tseries_dir + "lambda_var/"
-lmbda_linspace = (0.2, 1, 10)
-lmbda_index = (5, 4)
-bridge_paramVar(lmbda_linspace, lmbda_index, params, coords, param_tuple, pplane_dir = pplane_lmbdadir, tseries_dir = tseries_lmbdadir)
-#mu
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
-pplane_mudir = pplane_dir + "mu_var/"
-tseries_mudir = tseries_dir + "mu_var/"
-mu_linspace = (0.07, 0.13, 10)
-mu_index = (1, 0)
-bridge_paramVar(mu_linspace, mu_index, params, coords, param_tuple, pplane_dir = pplane_mudir, tseries_dir = tseries_mudir)
+##            traj_type = 'mod', mod_param = params[-1], arrows = False, xlabel = '\phi', ylabel='\dot{\phi}')
+##p
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#pplane_pdir = pplane_dir + "p_var/"
+#tseries_pdir = tseries_dir + "p_var/"
+#p_linspace = (0.1, 1, 10)
+#p_index = (13, 8)
+#bridge_paramVar(p_linspace, p_index, params, coords, param_tuple, pplane_dir = pplane_pdir, tseries_dir = tseries_pdir)
+##h
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#pplane_hdir = pplane_dir + "h_var/"
+#tseries_hdir = tseries_dir + "h_var/"
+#h_linspace = (0, 0.0035, 10)
+#h_index = (11, 7)
+#bridge_paramVar(h_linspace, h_index, params, coords, param_tuple, pplane_dir = pplane_hdir, tseries_dir = tseries_hdir)
+##a
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#pplane_adir = pplane_dir + "a_var/"
+#tseries_adir = tseries_dir + "a_var/"
+#a_linspace = (0.2, 0.4, 8)
+#a_index = (7, 5)
+#bridge_paramVar(a_linspace, a_index, params, coords, param_tuple, pplane_dir = pplane_adir, tseries_dir = tseries_adir)
+##k
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#pplane_kdir = pplane_dir + "k_var/"
+#tseries_kdir = tseries_dir + "k_var/"
+#k_linspace = (0.1, 2, 10)
+#k_index = (9, 6)
+#bridge_paramVar(k_linspace, k_index, params, coords, param_tuple, pplane_dir = pplane_kdir, tseries_dir = tseries_kdir)
+##lambda
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#pplane_lmbdadir = pplane_dir + "lambda_var/"
+#tseries_lmbdadir = tseries_dir + "lambda_var/"
+#lmbda_linspace = (0.2, 1, 10)
+#lmbda_index = (5, 4)
+#bridge_paramVar(lmbda_linspace, lmbda_index, params, coords, param_tuple, pplane_dir = pplane_lmbdadir, tseries_dir = tseries_lmbdadir)
+##mu
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#pplane_mudir = pplane_dir + "mu_var/"
+#tseries_mudir = tseries_dir + "mu_var/"
+#mu_linspace = (0.07, 0.13, 10)
+#mu_index = (1, 0)
+#bridge_paramVar(mu_linspace, mu_index, params, coords, param_tuple, pplane_dir = pplane_mudir, tseries_dir = tseries_mudir)
 #w
 
 
