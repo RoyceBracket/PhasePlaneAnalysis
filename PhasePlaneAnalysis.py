@@ -7,10 +7,9 @@ Created on Tue Mar  5 07:54:02 2019
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
-from numpy import pi
 from numpy import concatenate as concat
-from SinglePedestrianModel import vvmodel
 from PedestrianBridgeModel import pedestrian_bridge 
+import imageio
 
 #params = (w,h,a)
 #vvmodel(phi, t, params)
@@ -134,42 +133,42 @@ def data_overParam(func, params, param_index, param_linspace, coord, coord_linsp
     return traj_comb
 #params=  (mu, w, g, l, lambda, a, k, h, p)
 
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
-param_name = "_{}"*len(param_tuple)
-param_name = param_name.format(*param_tuple)
-print(param_name)
-coord = [0.1, 0.1, 0.75, 0]
-#p
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-p_linspace = (0.1, 1, 100)
-data_name = "pvar"+ param_name
-data_overParam(pedestrian_bridge, params, 8, p_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
-#h
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-h_linspace = (0, 0.005, 100)
-data_name = "hvar"+ param_name
-data_overParam(pedestrian_bridge, params, 7, h_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
-#k
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-k_linspace = (0.1, 1.5, 100)
-data_name = "kvar"+ param_name
-data_overParam(pedestrian_bridge, params, 6, k_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
-#mu
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-mu_linspace = (0.05, 0.15, 100)
-data_name = "muvar"+ param_name
-data_overParam(pedestrian_bridge, params, 0, mu_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
-#lambda
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-lambda_linspace = (0.1, 1.5, 100)
-data_name = "lambdavar"+ param_name
-data_overParam(pedestrian_bridge, params, 4, lambda_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
-#a
-params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
-a_linspace = (0.1, 1.5, 100)
-data_name = "avar"+ param_name
-data_overParam(pedestrian_bridge, params, 5, a_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
-
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#param_name = "_{}"*len(param_tuple)
+#param_name = param_name.format(*param_tuple)
+#print(param_name)
+#coord = [0.1, 0.1, 0.75, 0]
+##p
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#p_linspace = (0.1, 1, 100)
+#data_name = "pvar"+ param_name
+#data_overParam(pedestrian_bridge, params, 8, p_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+##h
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#h_linspace = (0, 0.005, 100)
+#data_name = "hvar"+ param_name
+#data_overParam(pedestrian_bridge, params, 7, h_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+##k
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#k_linspace = (0.1, 1.5, 100)
+#data_name = "kvar"+ param_name
+#data_overParam(pedestrian_bridge, params, 6, k_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+##mu
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#mu_linspace = (0.05, 0.15, 100)
+#data_name = "muvar"+ param_name
+#data_overParam(pedestrian_bridge, params, 0, mu_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+##lambda
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#lambda_linspace = (0.1, 1.5, 100)
+#data_name = "lambdavar"+ param_name
+#data_overParam(pedestrian_bridge, params, 4, lambda_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+##a
+#params = [0.1, 0.7, 10, 1, 1, 1, 1, 0.002, 0.3]
+#a_linspace = (0.1, 1.5, 100)
+#data_name = "avar"+ param_name
+#data_overParam(pedestrian_bridge, params, 5, a_linspace, coord, (0, 5000, 100000), data_name = data_name, directory = "./Data/NewData/")
+#
 
 def selected_traj(func, params, coords, interval_cond, save = True, directory = ''):
     t = np.linspace(*interval_cond)
@@ -223,6 +222,124 @@ def phase_plane_traj(func, coords, params, interval_cond, func_vars = [0, 1], tr
             plt.plot(remainder[sampling-1000:], traj[sampling-1000:, 1], color='b')
             
     return
+
+def generate_GIF(name, filenames, directory = "./"):
+    with imageio.get_writer(directory + '{}.mp4'.format(name), mode='I', fps=10) as writer:
+        for filename in filenames:
+            image = imageio.imread(filename)
+            writer.append_data(image)
+    print("generated {}".format(name))
+    return
+
+#full_params = [params, param_index, param_linspace, coord, coord_linspace]
+def pplane_overData(data_name, fig_name, fig_title = '', func_vars = [0,1], param_tuple = (), ptuple_index = None, xlim = None, ylim = None, \
+                    xlabel = None, ylabel = None, directory = './', data_dir = "./", animate = False):
+    full_params = np.load(data_dir + "params" + data_name)
+    trajectories = np.load(data_dir + "traj" + data_name)
+    filenames = []
+    
+    params, param_index, param_linspace, coord, coord_linspace = full_params
+    param_arr = np.linspace(*param_linspace)
+    start, end, sampling = coord_linspace
+    pstart, pend, psampling = param_linspace
+    for traj, param in zip(trajectories, param_arr):
+        if ptuple_index != None:
+            param_tuple[ptuple_index] = param
+        graph_specifications(graph_type = "phase plane", xlabel = xlabel, ylabel = ylabel, xlim = xlim, ylim = ylim, \
+                         title = fig_title, param_tuple = param_tuple)
+        plt.plot(traj[sampling-1000:, func_vars[0]], traj[sampling-1000:, func_vars[1]], color = 'b')
+        filename = directory + fig_name + "{}.png".format(param)
+        plt.savefig(filename)
+        filenames.append(filename)
+        plt.close()
+            
+    np.save(directory + fig_name, filenames)
+    if animate:
+        generate_GIF(fig_name, filenames, directory = directory + "/gifs/")
+    
+    return
+#
+#directory = "./NewFigs/Phase Planes/animations/p_var/"
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#data_dir = "./Data/NewData/"
+#param_name = "_{}"*len(param_tuple)
+#param_name = param_name.format(*param_tuple)
+#data_name = "_pvar" + param_name + ".npy"
+#fig_name = "pplane_pvar"
+#filenames = np.load(directory+fig_name+".npy")
+#generate_GIF(fig_name+"2", filenames, directory = directory + "/gifs/")
+
+#p
+directory = "./NewFigs/Phase Planes/animations/p_var/"
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+data_dir = "./Data/NewData/"
+param_name = "_{}"*len(param_tuple)
+param_name = param_name.format(*param_tuple)
+data_name = "_pvar" + param_name + ".npy"
+fig_name = "pplane_pvar"
+pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 13, xlabel = '\phi', ylabel = '\dot{\phi}', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 13, xlabel = '\phi', ylabel = 'x', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 13, xlabel = 'x', ylabel = '\dot{x}', \
+                directory = directory, data_dir = data_dir, animate = True)
+
+#k
+directory = "./NewFigs/Phase Planes/animations/k_var/"
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+data_name = "_kvar" + param_name + ".npy"
+fig_name = "pplane_pvar"
+pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 9, xlabel = '\phi', ylabel = '\dot{\phi}', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 9, xlabel = '\phi', ylabel = 'x', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 9, xlabel = 'x', ylabel = '\dot{x}', \
+                directory = directory, data_dir = data_dir, animate = True)
+#h
+directory = "./NewFigs/Phase Planes/animations/h_var/"
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+data_name = "_hvar" + param_name + ".npy"
+fig_name = "pplane_pvar"
+pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 11, xlabel = '\phi', ylabel = '\dot{\phi}', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 11, xlabel = '\phi', ylabel = 'x', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 11, xlabel = 'x', ylabel = '\dot{x}', \
+                directory = directory, data_dir = data_dir, animate = True)
+#a
+directory = "./NewFigs/Phase Planes/animations/a_var/"
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+data_name = "_avar" + param_name + ".npy"
+fig_name = "pplane_pvar"
+pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 7, xlabel = '\phi', ylabel = '\dot{\phi}', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 7, xlabel = '\phi', ylabel = 'x', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 7, xlabel = 'x', ylabel = '\dot{x}', \
+                directory = directory, data_dir = data_dir, animate = True)
+#lambda
+directory = "./NewFigs/Phase Planes/animations/lambda_var/"
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+data_name = "_lambdavar" + param_name + ".npy"
+fig_name = "pplane_pvar"
+pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 5, xlabel = '\phi', ylabel = '\dot{\phi}', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 5, xlabel = '\phi', ylabel = 'x', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 5, xlabel = 'x', ylabel = '\dot{x}', \
+                directory = directory, data_dir = data_dir, animate = True)
+#mu
+directory = "./NewFigs/Phase Planes/animations/mu_var/"
+param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+data_name = "_muvar" + param_name + ".npy"
+fig_name = "pplane_pvar"
+pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 1, xlabel = '\phi', ylabel = '\dot{\phi}', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 1, xlabel = '\phi', ylabel = 'x', \
+                directory = directory, data_dir = data_dir, animate = True)
+pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 1, xlabel = 'x', ylabel = '\dot{x}', \
+                directory = directory, data_dir = data_dir, animate = True)
+
 
 #vector_field(bounds, func, params, fig_name, coords=(), func_vars = [0,1], \
 #                 param_tuple = (), fig_title = '', arrows = True, interval_cond = (0, 5000, 50000), 
