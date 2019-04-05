@@ -269,76 +269,140 @@ def pplane_overData(data_name, fig_name, fig_title = '', func_vars = [0,1], para
 #filenames = np.load(directory+fig_name+".npy")
 #generate_GIF(fig_name+"2", filenames, directory = directory + "/gifs/")
 
-#p
-directory = "./NewFigs/Phase Planes/animations/p_var/"
+##p
+#directory = "./NewFigs/Phase Planes/animations/p_var/"
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#data_dir = "./Data/NewData/"
+#param_name = "_{}"*len(param_tuple)
+#param_name = param_name.format(*param_tuple)
+#data_name = "_pvar" + param_name + ".npy"
+#fig_name = "pplane_pvar"
+#pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 13, xlabel = '\phi', ylabel = '\dot{\phi}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 13, xlabel = '\phi', ylabel = 'x', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 13, xlabel = 'x', ylabel = '\dot{x}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#
+##k
+#directory = "./NewFigs/Phase Planes/animations/k_var/"
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#data_name = "_kvar" + param_name + ".npy"
+#fig_name = "pplane_pvar"
+#pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 9, xlabel = '\phi', ylabel = '\dot{\phi}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 9, xlabel = '\phi', ylabel = 'x', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 9, xlabel = 'x', ylabel = '\dot{x}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+##h
+#directory = "./NewFigs/Phase Planes/animations/h_var/"
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#data_name = "_hvar" + param_name + ".npy"
+#fig_name = "pplane_pvar"
+#pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 11, xlabel = '\phi', ylabel = '\dot{\phi}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 11, xlabel = '\phi', ylabel = 'x', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 11, xlabel = 'x', ylabel = '\dot{x}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+##a
+#directory = "./NewFigs/Phase Planes/animations/a_var/"
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#data_name = "_avar" + param_name + ".npy"
+#fig_name = "pplane_pvar"
+#pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 7, xlabel = '\phi', ylabel = '\dot{\phi}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 7, xlabel = '\phi', ylabel = 'x', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 7, xlabel = 'x', ylabel = '\dot{x}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+##lambda
+#directory = "./NewFigs/Phase Planes/animations/lambda_var/"
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#data_name = "_lambdavar" + param_name + ".npy"
+#fig_name = "pplane_pvar"
+#pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 5, xlabel = '\phi', ylabel = '\dot{\phi}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 5, xlabel = '\phi', ylabel = 'x', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 5, xlabel = 'x', ylabel = '\dot{x}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+##mu
+#directory = "./NewFigs/Phase Planes/animations/mu_var/"
+#param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
+#data_name = "_muvar" + param_name + ".npy"
+#fig_name = "pplane_pvar"
+#pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 1, xlabel = '\phi', ylabel = '\dot{\phi}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 1, xlabel = '\phi', ylabel = 'x', \
+#                directory = directory, data_dir = data_dir, animate = True)
+#pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 1, xlabel = 'x', ylabel = '\dot{x}', \
+#                directory = directory, data_dir = data_dir, animate = True)
+
+
+
+#full_params = [params, param_index, param_linspace, coord, coord_linspace]
+def orbit_diagram(data_name, fig_name, fig_title = '', func_vars = [0, 1], xlim = None, ylim = None, \
+                    xlabel = None, ylabel = None, directory = './', data_dir = "./"):
+    full_params = np.load(data_dir + "params" + data_name)
+    trajectories = np.load(data_dir + "traj" + data_name)
+    params, param_index, param_linspace, coord, coord_linspace = full_params
+    start, end, sampling = coord_linspace
+    param_arr = np.linspace(*param_linspace)
+    
+    graph_specifications(graph_type = 'reg', xlim=xlim, ylim=ylim, xlabel=xlabel, ylabel=ylabel, title=fig_title)
+    for traj, param in zip(trajectories[:], param_arr[:]):
+        traj = traj[sampling-1000:, func_vars]
+        traj0 = traj[:, 0]
+        traj1 = traj[:, 1]
+        tmin = np.amin(traj1)
+        tmax = np.amax(traj1)
+        level = (tmin + tmax)/2
+        if level == 0 and tmax == 0 and tmin == 0:
+            continue
+        cond1 = traj[:, 1] < (level + tmax/50)
+        cond2 = traj[:, 1] > (level + tmin/50)
+        indices = np.where(np.logical_and(cond1,cond2))
+#        print(traj)
+#        print(level)
+#        print(indices)
+        plt.plot(np.repeat(param, traj0[indices].size), traj0[indices], '.', color = 'b')
+    
+    plt.savefig(directory + fig_name)
+    plt.show()
+    
+    return
+
+directory = "./NewFigs/Orbit Diagrams/"
 param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
 data_dir = "./Data/NewData/"
 param_name = "_{}"*len(param_tuple)
 param_name = param_name.format(*param_tuple)
+#p
 data_name = "_pvar" + param_name + ".npy"
-fig_name = "pplane_pvar"
-pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 13, xlabel = '\phi', ylabel = '\dot{\phi}', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 13, xlabel = '\phi', ylabel = 'x', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 13, xlabel = 'x', ylabel = '\dot{x}', \
-                directory = directory, data_dir = data_dir, animate = True)
-
-#k
-directory = "./NewFigs/Phase Planes/animations/k_var/"
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
-data_name = "_kvar" + param_name + ".npy"
-fig_name = "pplane_pvar"
-pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 9, xlabel = '\phi', ylabel = '\dot{\phi}', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 9, xlabel = '\phi', ylabel = 'x', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 9, xlabel = 'x', ylabel = '\dot{x}', \
-                directory = directory, data_dir = data_dir, animate = True)
+fig_name = "orbitXdotX_pvar"
+orbit_diagram(data_name, fig_name, func_vars = [2,3], xlabel = 'p', ylabel = 'x', directory = directory, data_dir = data_dir)
 #h
-directory = "./NewFigs/Phase Planes/animations/h_var/"
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
 data_name = "_hvar" + param_name + ".npy"
-fig_name = "pplane_pvar"
-pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 11, xlabel = '\phi', ylabel = '\dot{\phi}', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 11, xlabel = '\phi', ylabel = 'x', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 11, xlabel = 'x', ylabel = '\dot{x}', \
-                directory = directory, data_dir = data_dir, animate = True)
-#a
-directory = "./NewFigs/Phase Planes/animations/a_var/"
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
-data_name = "_avar" + param_name + ".npy"
-fig_name = "pplane_pvar"
-pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 7, xlabel = '\phi', ylabel = '\dot{\phi}', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 7, xlabel = '\phi', ylabel = 'x', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 7, xlabel = 'x', ylabel = '\dot{x}', \
-                directory = directory, data_dir = data_dir, animate = True)
+fig_name = "orbitXdotX_hvar"
+orbit_diagram(data_name, fig_name, func_vars = [2,3], xlabel = 'h', ylabel = 'x', directory = directory, data_dir = data_dir)
+#k
+data_name = "_kvar" + param_name + ".npy"
+fig_name = "orbitXdotX_kvar"
+orbit_diagram(data_name, fig_name, func_vars = [2,3], xlabel = 'k', ylabel = 'x', directory = directory, data_dir = data_dir)
 #lambda
-directory = "./NewFigs/Phase Planes/animations/lambda_var/"
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
 data_name = "_lambdavar" + param_name + ".npy"
-fig_name = "pplane_pvar"
-pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 5, xlabel = '\phi', ylabel = '\dot{\phi}', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 5, xlabel = '\phi', ylabel = 'x', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 5, xlabel = 'x', ylabel = '\dot{x}', \
-                directory = directory, data_dir = data_dir, animate = True)
+fig_name = "orbitXdotX_lambdavar"
+orbit_diagram(data_name, fig_name, func_vars = [2,3], xlabel = 'lambda', ylabel = 'x', directory = directory, data_dir = data_dir)
 #mu
-directory = "./NewFigs/Phase Planes/animations/mu_var/"
-param_tuple = ['mu', 0.1, 'w', 0.7, 'lambda', 1, 'a', 1, 'k', 1, 'h', 0.002, 'p', 0.3]
 data_name = "_muvar" + param_name + ".npy"
-fig_name = "pplane_pvar"
-pplane_overData(data_name, fig_name+"PhiDotPhi", param_tuple = param_tuple, ptuple_index = 1, xlabel = '\phi', ylabel = '\dot{\phi}', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"PHIX", func_vars = [0, 2], param_tuple = param_tuple, ptuple_index = 1, xlabel = '\phi', ylabel = 'x', \
-                directory = directory, data_dir = data_dir, animate = True)
-pplane_overData(data_name, fig_name+"XDotX", func_vars = [2, 3], param_tuple = param_tuple, ptuple_index = 1, xlabel = 'x', ylabel = '\dot{x}', \
-                directory = directory, data_dir = data_dir, animate = True)
+fig_name = "orbitXdotX_muvar"
+orbit_diagram(data_name, fig_name, func_vars = [2,3], xlabel = 'mu', ylabel = 'x', directory = directory, data_dir = data_dir)
+#a
+data_name = "_avar" + param_name + ".npy"
+fig_name = "orbitXdotX_avar"
+orbit_diagram(data_name, fig_name, func_vars = [2,3], xlabel = 'a', ylabel = 'x', directory = directory, data_dir = data_dir)
 
 
 #vector_field(bounds, func, params, fig_name, coords=(), func_vars = [0,1], \
